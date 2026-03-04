@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Ajouter une Charge - Gestion Copropriété{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>Ajouter une Nouvelle Charge</h1>
+</div>
+
+<div class="content">
+    <form method="POST">
+        <div class="form-group">
+            <label for="numero">Numéro de Charge:</label>
+            <input type="text" id="numero" name="numero" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="proprietaire_id">Propriétaire:</label>
+            <select id="proprietaire_id" name="proprietaire_id" required>
+                <option value="">-- Sélectionner --</option>
+                {% for prop in proprietaires %}
+                    <option value="{{ prop.id }}">{{ prop.nom_complet() }} (Lot {{ prop.numero_lot }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="montant">Montant (€):</label>
+            <input type="number" id="montant" name="montant" step="0.01" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="type_charge">Type de Charge:</label>
+            <select id="type_charge" name="type_charge" required>
+                <option value="">-- Sélectionner --</option>
+                <option value="chauffage">Chauffage</option>
+                <option value="eau">Eau</option>
+                <option value="électricité">Électricité</option>
+                <option value="copropriété">Copropriété</option>
+                <option value="maintenance">Maintenance</option>
+                <option value="assurance">Assurance</option>
+                <option value="syndic">Frais de Syndic</option>
+                <option value="autre">Autre</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="periode">Période:</label>
+            <input type="text" id="periode" name="periode" placeholder="ex: 2024-Q1" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="date_echeance">Date d'Échéance:</label>
+            <input type="date" id="date_echeance" name="date_echeance" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="date_paiement">Date de Paiement:</label>
+            <input type="date" id="date_paiement" name="date_paiement">
+        </div>
+        
+        <div class="form-group">
+            <label for="statut">Statut:</label>
+            <select id="statut" name="statut">
+                <option value="en attente">En attente</option>
+                <option value="payée">Payée</option>
+                <option value="en retard">En retard</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="notes">Notes:</label>
+            <textarea id="notes" name="notes"></textarea>
+        </div>
+        
+        <div class="form-group">
+            <button type="submit" class="btn btn-success">Créer la Charge</button>
+            <a href="{{ url_for('charges.liste_charges') }}" class="btn btn-primary">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

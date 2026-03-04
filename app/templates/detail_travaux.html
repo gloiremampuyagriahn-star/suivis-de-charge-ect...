@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Détail des Travaux - Gestion Copropriété{% endblock %}
+
+{% block extra_css %}
+<style>
+    .progress-track {
+        width: 300px;
+        max-width: 100%;
+        height: 20px;
+        accent-color: #3498db;
+        vertical-align: middle;
+    }
+
+    .progress-text {
+        margin-left: 8px;
+        font-size: 12px;
+        color: #2c3e50;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>{{ travaux.titre }}</h1>
+    <div>
+        <a href="{{ url_for('travaux.modifier_travaux', id=travaux.id) }}" class="btn btn-primary">Modifier</a>
+        <a href="{{ url_for('travaux.liste_travaux') }}" class="btn btn-primary">Retour</a>
+    </div>
+</div>
+
+<div class="content">
+    <h2>Informations Générales</h2>
+    <table style="border: none;">
+        <tr>
+            <td style="font-weight: bold; width: 150px;">Type:</td>
+            <td>{{ travaux.type_travaux }}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Statut:</td>
+            <td>
+                <span class="status-badge {% if travaux.statut == 'terminé' %}status-success{% elif travaux.statut == 'en cours' %}status-info{% else %}status-warning{% endif %}">
+                    {{ travaux.statut }}
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Description:</td>
+            <td>{{ travaux.description }}</td>
+        </tr>
+    </table>
+    
+    <h2>Planification</h2>
+    <table style="border: none;">
+        <tr>
+            <td style="font-weight: bold; width: 150px;">Date de Début:</td>
+            <td>{{ travaux.date_debut.strftime('%d/%m/%Y à %H:%M') }}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Date de Fin Prévue:</td>
+            <td>{{ travaux.date_fin_prevue.strftime('%d/%m/%Y à %H:%M') if travaux.date_fin_prevue else 'Non définie' }}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Date de Fin Réelle:</td>
+            <td>{{ travaux.date_fin_reelle.strftime('%d/%m/%Y à %H:%M') if travaux.date_fin_reelle else 'Non terminé' }}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Progression:</td>
+            <td>
+                <progress class="progress-track" value="{{ travaux.pourcentage_avancement() }}" max="100"></progress>
+                <span class="progress-text">{{ "%.0f"|format(travaux.pourcentage_avancement()) }}%</span>
+            </td>
+        </tr>
+    </table>
+    
+    <h2>Budget</h2>
+    <table style="border: none;">
+        <tr>
+            <td style="font-weight: bold; width: 150px;">Budget Prévisionnel:</td>
+            <td>{{ "%.2f"|format(travaux.budget_previsionnel or 0) }} €</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Budget Réel:</td>
+            <td>{{ "%.2f"|format(travaux.budget_reel or 0) }} €</td>
+        </tr>
+        {% if travaux.budget_reel and travaux.budget_previsionnel %}
+        <tr>
+            <td style="font-weight: bold;">Écart:</td>
+            <td>
+                {% if travaux.budget_reel > travaux.budget_previsionnel %}
+                    <span style="color: #e74c3c;">+{{ "%.2f"|format(travaux.budget_reel - travaux.budget_previsionnel) }} € (dépassement)</span>
+                {% elif travaux.budget_reel < travaux.budget_previsionnel %}
+                    <span style="color: #27ae60;">-{{ "%.2f"|format(travaux.budget_previsionnel - travaux.budget_reel) }} € (économies)</span>
+                {% else %}
+                    <span style="color: #2980b9;">Conforme</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endif %}
+    </table>
+    
+    <h2>Contacts et Entreprise</h2>
+    <table style="border: none;">
+        <tr>
+            <td style="font-weight: bold; width: 150px;">Responsable:</td>
+            <td>{{ travaux.responsable or 'Non assigné' }}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Entreprise:</td>
+            <td>{{ travaux.entreprise or 'Non définie' }}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Contact:</td>
+            <td>{{ travaux.contact_entreprise or 'Non défini' }}</td>
+        </tr>
+    </table>
+    
+    {% if travaux.appel_offres or travaux.devis or travaux.notes %}
+    <h2>Documents et Notes</h2>
+    
+    {% if travaux.appel_offres %}
+    <h3>Appel d'Offres</h3>
+    <p>{{ travaux.appel_offres }}</p>
+    {% endif %}
+    
+    {% if travaux.devis %}
+    <h3>Devis</h3>
+    <p>{{ travaux.devis }}</p>
+    {% endif %}
+    
+    {% if travaux.notes %}
+    <h3>Notes</h3>
+    <p>{{ travaux.notes }}</p>
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

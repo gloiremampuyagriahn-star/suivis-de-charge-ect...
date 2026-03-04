@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Rapport des Travaux - Gestion Copropriété{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>Rapport des Travaux</h1>
+</div>
+
+<div class="content">
+    <h2>Totaux par Type de Travaux</h2>
+    {% if totaux_par_type %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Nombre</th>
+                    <th>Budget Prévisionnel (€)</th>
+                    <th>Budget Réel (€)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for type_item, prev, reel, nombre in totaux_par_type %}
+                <tr>
+                    <td>{{ type_item }}</td>
+                    <td>{{ nombre }}</td>
+                    <td>{{ "%.2f"|format(prev or 0) }}</td>
+                    <td>{{ "%.2f"|format(reel or 0) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Aucune donnée disponible.</p>
+    {% endif %}
+</div>
+
+<div class="content">
+    <h2>Totaux par Statut</h2>
+    {% if totaux_par_statut %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Statut</th>
+                    <th>Nombre</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for statut, nombre in totaux_par_statut %}
+                <tr>
+                    <td>{{ statut }}</td>
+                    <td>{{ nombre }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Aucune donnée disponible.</p>
+    {% endif %}
+</div>
+
+<div class="form-group">
+    <a href="{{ url_for('travaux.liste_travaux') }}" class="btn btn-primary">Retour à la liste</a>
+</div>
+{% endblock %}

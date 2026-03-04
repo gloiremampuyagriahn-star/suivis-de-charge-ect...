@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Ajouter une Assemblée - Gestion Copropriété{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>Ajouter une Nouvelle Assemblée Générale</h1>
+</div>
+
+<div class="content">
+    <form method="POST">
+        <div class="form-group">
+            <label for="titre">Titre:</label>
+            <input type="text" id="titre" name="titre" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="date_seance">Date et Heure:</label>
+            <input type="datetime-local" id="date_seance" name="date_seance" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="lieu">Lieu:</label>
+            <input type="text" id="lieu" name="lieu" placeholder="ex: Salle de réunion du bâtiment">
+        </div>
+        
+        <div class="form-group">
+            <label for="ordre_du_jour">Ordre du Jour:</label>
+            <textarea id="ordre_du_jour" name="ordre_du_jour" required></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="proces_verbal">Procès-Verbal:</label>
+            <textarea id="proces_verbal" name="proces_verbal"></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="statut">Statut:</label>
+            <select id="statut" name="statut">
+                <option value="programmée">Programmée</option>
+                <option value="effectuée">Effectuée</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <button type="submit" class="btn btn-success">Créer l'Assemblée</button>
+            <a href="{{ url_for('assemblees.liste_assemblees') }}" class="btn btn-primary">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

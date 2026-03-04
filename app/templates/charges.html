@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Charges - Gestion Copropriété{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1><i class="fas fa-receipt"></i> Gestion des Charges</h1>
+    <div>
+        <a href="{{ url_for('charges.ajouter_charge') }}" class="btn btn-success"><i class="fas fa-plus"></i> Nouvelle Charge</a>
+        <a href="{{ url_for('charges.rapport_charges') }}" class="btn btn-primary"><i class="fas fa-chart-pie"></i> Rapport</a>
+    </div>
+</div>
+
+<div class="content">
+    <h2>Filtres</h2>
+    <form method="GET" style="margin-bottom: 20px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 150px; gap: 10px;">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label for="statut">Statut:</label>
+                <select id="statut" name="statut">
+                    <option value="">Tous</option>
+                    <option value="en attente" {% if filtre_statut == 'en attente' %}selected{% endif %}>En attente</option>
+                    <option value="payée" {% if filtre_statut == 'payée' %}selected{% endif %}>Payée</option>
+                    <option value="en retard" {% if filtre_statut == 'en retard' %}selected{% endif %}>En retard</option>
+                </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label for="type">Type:</label>
+                <select id="type" name="type">
+                    <option value="">Tous</option>
+                    {% for type_item in types_charge %}
+                        <option value="{{ type_item[0] }}" {% if filtre_type == type_item[0] %}selected{% endif %}>{{ type_item[0] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0; margin-top: 24px;">
+                <button type="submit" class="btn btn-primary">Filtrer</button>
+            </div>
+        </div>
+    </form>
+    
+    <h2><i class="fas fa-list"></i> Liste des Charges</h2>
+    
+    {% if charges.items %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Numéro</th>
+                    <th>Propriétaire</th>
+                    <th>Type</th>
+                    <th>Montant</th>
+                    <th>Période</th>
+                    <th>Échéance</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for charge in charges.items %}
+                <tr>
+                    <td>{{ charge.numero }}</td>
+                    <td>{{ charge.proprietaire.nom_complet() }}</td>
+                    <td>{{ charge.type_charge }}</td>
+                    <td>{{ "%.2f"|format(charge.montant) }} €</td>
+                    <td>{{ charge.periode }}</td>
+                    <td>{{ charge.date_echéance.strftime('%d/%m/%Y') }}</td>
+                    <td>
+                        <span class="status-badge {% if charge.statut == 'payée' %}status-success{% elif charge.statut == 'en retard' %}status-danger{% else %}status-info{% endif %}">
+                            {{ charge.statut }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="actions">
+                            <a href="{{ url_for('charges.modifier_charge', id=charge.id) }}" class="btn btn-primary" style="font-size: 12px; padding: 5px 10px;"><i class="fas fa-edit"></i> Modifier</a>
+                            <form method="POST" action="{{ url_for('charges.supprimer_charge', id=charge.id) }}" style="display: inline;">
+                                <button type="submit" class="btn btn-danger" style="font-size: 12px; padding: 5px 10px;" onclick="return confirm('Êtes-vous sûr?');"><i class="fas fa-trash"></i> Supprimer</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <!-- Pagination -->
+        {% if charges.pages > 1 %}
+        <div class="pagination">
+            {% if charges.has_prev %}
+                <a href="{{ url_for('charges.liste_charges', page=charges.prev_num, statut=filtre_statut, type=filtre_type) }}">« Précédent</a>
+            {% endif %}
+            
+            {% for page_num in charges.iter_pages() %}
+                {% if page_num %}
+                    {% if page_num == charges.page %}
+                        <span class="current">{{ page_num }}</span>
+                    {% else %}
+                        <a href="{{ url_for('charges.liste_charges', page=page_num, statut=filtre_statut, type=filtre_type) }}">{{ page_num }}</a>
+                    {% endif %}
+                {% else %}
+                    <span>...</span>
+                {% endif %}
+            {% endfor %}
+            
+            {% if charges.has_next %}
+                <a href="{{ url_for('charges.liste_charges', page=charges.next_num, statut=filtre_statut, type=filtre_type) }}">Suivant »</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    {% else %}
+        <p>Aucune charge enregistrée.</p>
+    {% endif %}
+</div>
+{% endblock %}

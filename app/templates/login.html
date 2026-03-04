@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Gestion Copropriété</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            gap: 20px;
+        }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .login-container {
+            background-color: transparent;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .login-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .login-header i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .login-header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .login-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .alert {
+            padding: 15px 20px;
+            margin-bottom: 0;
+            border-radius: 12px;
+            border-left: 4px solid;
+            background-color: white;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .alert-error {
+            background-color: #fff5f5;
+            color: #721c24;
+            border-color: #e74c3c;
+        }
+        
+        .alert-info {
+            background-color: #e8f4f8;
+            color: #0c5460;
+            border-color: #3498db;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card h3 {
+            margin: 0 0 25px 0;
+            color: #2c3e50;
+            font-size: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 12px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .form-group label i {
+            margin-right: 5px;
+            color: #667eea;
+        }
+        
+        .form-group .input-wrapper {
+            position: relative;
+        }
+        
+        .form-group i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s;
+            background-color: #fafafa;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+            background-color: white;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .remember-me input {
+            margin-right: 8px;
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+        
+        .remember-me label {
+            cursor: pointer;
+            margin-bottom: 0;
+        }
+        
+        .forgot-password {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .forgot-password a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        
+        .forgot-password a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+        
+        .login-footer {
+            text-align: center;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.95);
+            color: #666;
+            font-size: 13px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+                gap: 15px;
+            }
+            
+            .card-grid {
+                gap: 15px;
+                max-width: 100%;
+            }
+            
+            .login-container {
+                max-width: 100%;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .card h3 {
+                font-size: 18px;
+                margin-bottom: 20px;
+            }
+            
+            .login-header {
+                padding: 25px 15px;
+            }
+            
+            .login-header i {
+                font-size: 40px;
+            }
+            
+            .login-header h1 {
+                font-size: 20px;
+            }
+            
+            .login-footer {
+                max-width: 100%;
+                font-size: 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+                gap: 12px;
+            }
+            
+            .card {
+                padding: 18px;
+                border-radius: 10px;
+            }
+            
+            .card h3 {
+                font-size: 16px;
+                margin-bottom: 18px;
+            }
+            
+            .login-header {
+                padding: 20px 12px;
+                border-radius: 10px;
+            }
+            
+            .login-header i {
+                font-size: 36px;
+                margin-bottom: 12px;
+            }
+            
+            .login-header h1 {
+                font-size: 18px;
+                margin-bottom: 8px;
+            }
+            
+            .login-header p {
+                font-size: 13px;
+            }
+            
+            .form-group label {
+                font-size: 13px;
+            }
+            
+            .form-group input {
+                padding: 10px 10px 10px 38px;
+                font-size: 15px;
+            }
+            
+            .login-btn {
+                padding: 12px;
+                font-size: 15px;
+            }
+            
+            .remember-me {
+                font-size: 13px;
+            }
+            
+            .forgot-password a {
+                font-size: 13px;
+            }
+            
+            .login-footer {
+                padding: 12px;
+                font-size: 11px;
+                border-radius: 10px;
+            }
+            
+            .alert {
+                padding: 12px 15px;
+                font-size: 13px;
+                border-radius: 10px;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            body {
+                padding: 8px;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            .login-header {
+                padding: 18px 10px;
+            }
+            
+            .login-header i {
+                font-size: 32px;
+            }
+            
+            .login-header h1 {
+                font-size: 16px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <i class="fas fa-building"></i>
+            <h1>Gestion Copropriété</h1>
+            <p>Système de gestion des immeubles</p>
+        </div>
+    </div>
+    
+    <div class="card-grid">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        <strong><i class="fas fa-info-circle"></i> {{ 'Information' if category == 'info' else 'Erreur' }}</strong><br>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <div class="card">
+            <h3><i class="fas fa-sign-in-alt"></i> Connexion</h3>
+            <form method="POST">
+                <div class="form-group">
+                    <label for="username"><i class="fas fa-user"></i> Nom d'utilisateur</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" name="username" required autofocus>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Mot de passe</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                </div>
+                
+                <div class="remember-me">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Se souvenir de moi</label>
+                </div>
+                
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Connexion
+                </button>
+                
+                <div class="forgot-password">
+                    <a href="#"><i class="fas fa-key"></i> Mot de passe oublié?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="login-footer">
+        <i class="fas fa-shield-alt"></i> Connexion sécurisée - © 2026 Tous droits réservés
+    </div>
+</body>
+</html>

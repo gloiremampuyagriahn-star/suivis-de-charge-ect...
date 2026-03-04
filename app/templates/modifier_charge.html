@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Modifier une Charge - Gestion Copropriété{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>Modifier la Charge</h1>
+</div>
+
+<div class="content">
+    <form method="POST">
+        <div class="form-group">
+            <label for="numero">Numéro de Charge:</label>
+            <input type="text" id="numero" name="numero" value="{{ charge.numero }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="proprietaire_id">Propriétaire:</label>
+            <select id="proprietaire_id" name="proprietaire_id" required>
+                {% for prop in proprietaires %}
+                    <option value="{{ prop.id }}" {% if prop.id == charge.proprietaire_id %}selected{% endif %}>{{ prop.nom_complet() }} (Lot {{ prop.numero_lot }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="montant">Montant (€):</label>
+            <input type="number" id="montant" name="montant" value="{{ charge.montant }}" step="0.01" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="type_charge">Type de Charge:</label>
+            <select id="type_charge" name="type_charge" required>
+                <option value="chauffage" {% if charge.type_charge == 'chauffage' %}selected{% endif %}>Chauffage</option>
+                <option value="eau" {% if charge.type_charge == 'eau' %}selected{% endif %}>Eau</option>
+                <option value="électricité" {% if charge.type_charge == 'électricité' %}selected{% endif %}>Électricité</option>
+                <option value="copropriété" {% if charge.type_charge == 'copropriété' %}selected{% endif %}>Copropriété</option>
+                <option value="maintenance" {% if charge.type_charge == 'maintenance' %}selected{% endif %}>Maintenance</option>
+                <option value="assurance" {% if charge.type_charge == 'assurance' %}selected{% endif %}>Assurance</option>
+                <option value="syndic" {% if charge.type_charge == 'syndic' %}selected{% endif %}>Frais de Syndic</option>
+                <option value="autre" {% if charge.type_charge == 'autre' %}selected{% endif %}>Autre</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="periode">Période:</label>
+            <input type="text" id="periode" name="periode" value="{{ charge.periode }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="date_echeance">Date d'Échéance:</label>
+            <input type="date" id="date_echeance" name="date_echeance" value="{{ charge.date_echéance.strftime('%Y-%m-%d') }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="date_paiement">Date de Paiement:</label>
+            <input type="date" id="date_paiement" name="date_paiement" value="{{ charge.date_paiement.strftime('%Y-%m-%d') if charge.date_paiement else '' }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="statut">Statut:</label>
+            <select id="statut" name="statut">
+                <option value="en attente" {% if charge.statut == 'en attente' %}selected{% endif %}>En attente</option>
+                <option value="payée" {% if charge.statut == 'payée' %}selected{% endif %}>Payée</option>
+                <option value="en retard" {% if charge.statut == 'en retard' %}selected{% endif %}>En retard</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="notes">Notes:</label>
+            <textarea id="notes" name="notes">{{ charge.notes or '' }}</textarea>
+        </div>
+        
+        <div class="form-group">
+            <button type="submit" class="btn btn-success">Mettre à Jour</button>
+            <a href="{{ url_for('charges.liste_charges') }}" class="btn btn-primary">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

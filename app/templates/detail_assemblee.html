@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Détail Assemblée - Gestion Copropriété{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>{{ assemblee.titre }}</h1>
+    <div>
+        <a href="{{ url_for('assemblees.modifier_assemblee', id=assemblee.id) }}" class="btn btn-primary">Modifier</a>
+        <a href="{{ url_for('assemblees.liste_assemblees') }}" class="btn btn-primary">Retour</a>
+    </div>
+</div>
+
+<div class="content">
+    <h2>Informations</h2>
+    <table style="border: none;">
+        <tr>
+            <td style="font-weight: bold;">Date:</td>
+            <td>{{ assemblee.date_seance.strftime('%d/%m/%Y à %H:%M') }}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Lieu:</td>
+            <td>{{ assemblee.lieu or 'Non spécifié' }}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Statut:</td>
+            <td>
+                <span class="status-badge {% if assemblee.statut == 'effectuée' %}status-success{% else %}status-info{% endif %}">
+                    {{ assemblee.statut }}
+                </span>
+            </td>
+        </tr>
+    </table>
+    
+    <h2>Ordre du Jour</h2>
+    <p>{{ assemblee.ordre_du_jour }}</p>
+    
+    {% if assemblee.proces_verbal %}
+    <h2>Procès-Verbal</h2>
+    <p>{{ assemblee.proces_verbal }}</p>
+    {% endif %}
+</div>
+
+<div class="content">
+    <h2>Votes ({{ votes|length }})</h2>
+    
+    {% if stats_votes %}
+    <table>
+        <thead>
+            <tr>
+                <th>Décision</th>
+                <th>Nombre</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Pour</td>
+                <td>{{ stats_votes.get('pour', 0) }}</td>
+            </tr>
+            <tr>
+                <td>Contre</td>
+                <td>{{ stats_votes.get('contre', 0) }}</td>
+            </tr>
+            <tr>
+                <td>Abstention</td>
+                <td>{{ stats_votes.get('abstention', 0) }}</td>
+            </tr>
+        </tbody>
+    </table>
+    {% endif %}
+    
+    {% if votes %}
+    <h3 style="margin-top: 20px;">Détail des votes</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Propriétaire</th>
+                <th>Décision</th>
+                <th>Date du Vote</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vote in votes %}
+            <tr>
+                <td>{{ vote.proprietaire.nom_complet() }}</td>
+                <td>{{ vote.decision }}</td>
+                <td>{{ vote.date_vote.strftime('%d/%m/%Y %H:%M') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>Aucun vote enregistré.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Modifier Propriétaire - Gestion Copropriété{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>Modifier le Propriétaire</h1>
+</div>
+
+<div class="content">
+    <form method="POST">
+        <div class="form-group">
+            <label for="prenom">Prénom:</label>
+            <input type="text" id="prenom" name="prenom" value="{{ proprietaire.prenom }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="nom">Nom:</label>
+            <input type="text" id="nom" name="nom" value="{{ proprietaire.nom }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{ proprietaire.email }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="telephone">Téléphone:</label>
+            <input type="tel" id="telephone" name="telephone" value="{{ proprietaire.telephone or '' }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="numero_lot">Numéro de Lot:</label>
+            <input type="text" id="numero_lot" name="numero_lot" value="{{ proprietaire.numero_lot }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="pourcentage_part">Pourcentage de Part (%):</label>
+            <input type="number" id="pourcentage_part" name="pourcentage_part" value="{{ proprietaire.pourcentage_part }}" step="0.01" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="actif">
+                <input type="checkbox" id="actif" name="actif" {% if proprietaire.actif %}checked{% endif %}>
+                Propriétaire Actif
+            </label>
+        </div>
+        
+        <div class="form-group">
+            <button type="submit" class="btn btn-success">Mettre à Jour</button>
+            <a href="{{ url_for('main.proprietaires') }}" class="btn btn-primary">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

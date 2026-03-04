@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Propriétaires - Gestion Copropriété{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1><i class="fas fa-users"></i> Gestion des Propriétaires</h1>
+    <a href="{{ url_for('main.ajouter_proprietaire') }}" class="btn btn-success"><i class="fas fa-plus"></i> Ajouter un Propriétaire</a>
+</div>
+
+<div class="content">
+    <h2><i class="fas fa-list"></i> Liste des Propriétaires</h2>
+    
+    {% if proprietaires.items %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom Complet</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Lot n°</th>
+                    <th>% Part</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for prop in proprietaires.items %}
+                <tr>
+                    <td>{{ prop.nom_complet() }}</td>
+                    <td>{{ prop.email }}</td>
+                    <td>{{ prop.telephone or '-' }}</td>
+                    <td>{{ prop.numero_lot }}</td>
+                    <td>{{ "%.1f"|format(prop.pourcentage_part) }}%</td>
+                    <td>
+                        <span class="status-badge {% if prop.actif %}status-success{% else %}status-danger{% endif %}">
+                            {% if prop.actif %}Actif{% else %}Inactif{% endif %}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="actions">
+                            <a href="{{ url_for('main.modifier_proprietaire', id=prop.id) }}" class="btn btn-primary" style="font-size: 12px; padding: 5px 10px;"><i class="fas fa-edit"></i> Modifier</a>
+                            <form method="POST" action="{{ url_for('main.supprimer_proprietaire', id=prop.id) }}" style="display: inline;">
+                                <button type="submit" class="btn btn-danger" style="font-size: 12px; padding: 5px 10px;" onclick="return confirm('Êtes-vous sûr?');"><i class="fas fa-trash"></i> Supprimer</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <!-- Pagination -->
+        {% if proprietaires.pages > 1 %}
+        <div class="pagination">
+            {% if proprietaires.has_prev %}
+                <a href="{{ url_for('main.proprietaires', page=proprietaires.prev_num) }}">« Précédent</a>
+            {% endif %}
+            
+            {% for page_num in proprietaires.iter_pages() %}
+                {% if page_num %}
+                    {% if page_num == proprietaires.page %}
+                        <span class="current">{{ page_num }}</span>
+                    {% else %}
+                        <a href="{{ url_for('main.proprietaires', page=page_num) }}">{{ page_num }}</a>
+                    {% endif %}
+                {% else %}
+                    <span>...</span>
+                {% endif %}
+            {% endfor %}
+            
+            {% if proprietaires.has_next %}
+                <a href="{{ url_for('main.proprietaires', page=proprietaires.next_num) }}">Suivant »</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    {% else %}
+        <p>Aucun propriétaire enregistré. <a href="{{ url_for('main.ajouter_proprietaire') }}"><i class="fas fa-plus"></i> Créer un propriétaire</a></p>
+    {% endif %}
+</div>
+{% endblock %}

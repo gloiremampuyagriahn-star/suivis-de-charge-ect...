@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Ajouter des Travaux - Gestion Copropriété{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>Ajouter de Nouveaux Travaux</h1>
+</div>
+
+<div class="content">
+    <form method="POST">
+        <div class="form-group">
+            <label for="titre">Titre:</label>
+            <input type="text" id="titre" name="titre" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" required></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="type_travaux">Type de Travaux:</label>
+            <select id="type_travaux" name="type_travaux" required>
+                <option value="">-- Sélectionner --</option>
+                <option value="maintenance">Maintenance</option>
+                <option value="rénovation">Rénovation</option>
+                <option value="urgence">Urgence</option>
+                <option value="amélioration">Amélioration</option>
+                <option value="contrôle">Contrôle</option>
+                <option value="autre">Autre</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="date_debut">Date de Début:</label>
+            <input type="datetime-local" id="date_debut" name="date_debut" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="date_fin_prevue">Date de Fin Prévue:</label>
+            <input type="datetime-local" id="date_fin_prevue" name="date_fin_prevue">
+        </div>
+        
+        <div class="form-group">
+            <label for="budget_previsionnel">Budget Prévisionnel (€):</label>
+            <input type="number" id="budget_previsionnel" name="budget_previsionnel" step="0.01">
+        </div>
+        
+        <div class="form-group">
+            <label for="responsable">Responsable:</label>
+            <input type="text" id="responsable" name="responsable">
+        </div>
+        
+        <div class="form-group">
+            <label for="entreprise">Entreprise:</label>
+            <input type="text" id="entreprise" name="entreprise">
+        </div>
+        
+        <div class="form-group">
+            <label for="contact_entreprise">Contact Entreprise:</label>
+            <input type="text" id="contact_entreprise" name="contact_entreprise" placeholder="Téléphone ou Email">
+        </div>
+        
+        <div class="form-group">
+            <label for="statut">Statut:</label>
+            <select id="statut" name="statut">
+                <option value="planifié">Planifié</option>
+                <option value="en cours">En cours</option>
+                <option value="terminé">Terminé</option>
+                <option value="suspendu">Suspendu</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="appel_offres">Appel d'Offres:</label>
+            <textarea id="appel_offres" name="appel_offres"></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="devis">Devis:</label>
+            <textarea id="devis" name="devis"></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="notes">Notes:</label>
+            <textarea id="notes" name="notes"></textarea>
+        </div>
+        
+        <div class="form-group">
+            <button type="submit" class="btn btn-success">Créer les Travaux</button>
+            <a href="{{ url_for('travaux.liste_travaux') }}" class="btn btn-primary">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

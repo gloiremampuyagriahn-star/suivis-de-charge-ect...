@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Rapport des Charges - Gestion Copropriété{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>Rapport des Charges</h1>
+</div>
+
+<div class="content">
+    <h2>Totaux par Type de Charge</h2>
+    {% if totaux_par_type %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Total (€)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for type_item, total in totaux_par_type %}
+                <tr>
+                    <td>{{ type_item }}</td>
+                    <td>{{ "%.2f"|format(total) }} €</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Aucune donnée disponible.</p>
+    {% endif %}
+</div>
+
+<div class="content">
+    <h2>Totaux par Statut</h2>
+    {% if totaux_par_statut %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Statut</th>
+                    <th>Nombre</th>
+                    <th>Total (€)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for statut, total_montant, nombre in totaux_par_statut %}
+                <tr>
+                    <td>{{ statut }}</td>
+                    <td>{{ nombre }}</td>
+                    <td>{{ "%.2f"|format(total_montant) }} €</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Aucune donnée disponible.</p>
+    {% endif %}
+</div>
+
+<div class="content">
+    <h2>Totaux par Propriétaire</h2>
+    {% if charges_par_prop %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Propriétaire</th>
+                    <th>Nombre de Charges</th>
+                    <th>Total (€)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for nom, total, nombre in charges_par_prop %}
+                <tr>
+                    <td>{{ nom }}</td>
+                    <td>{{ nombre }}</td>
+                    <td>{{ "%.2f"|format(total) }} €</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Aucune donnée disponible.</p>
+    {% endif %}
+</div>
+
+<div class="form-group">
+    <a href="{{ url_for('charges.liste_charges') }}" class="btn btn-primary">Retour à la liste</a>
+</div>
+{% endblock %}
